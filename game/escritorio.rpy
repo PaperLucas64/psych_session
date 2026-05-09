@@ -1,3 +1,4 @@
+
 # ==============================================================================
 # 01. DEFINICIÓN DE IMÁGENES
 # ==============================================================================
@@ -9,6 +10,12 @@ image icon_folder = im.Scale("images/icon_folder.png", 120, 120)
 image icon_notas = im.Scale("images/icon_notas.png", 120, 120)
 image icon_explorer = im.Scale("images/icon_explorer.png", 120, 120)
 image icon_papelera = im.Scale("images/icon_papelera.png", 120, 120)
+
+# ---------------- ANIMACIÓN APARECER POCO A POCO ----------------
+transform aparecer_lento(retraso):
+    alpha 0.0
+    pause retraso
+    linear 0.5 alpha 1.0
 
 # ==============================================================================
 # 02. ANIMACIÓN DE ICONOS
@@ -61,14 +68,15 @@ screen pantalla_escritorio():
             text _("Mi PC"):
                 xalign 0.5 size 18 color "#000" outlines [(1, "#fff", 0, 0)]
 
-        # PACIENTES
+       # PACIENTES
         vbox:
             spacing 5
             imagebutton:
                 xalign 0.5
                 idle "icon_folder"
                 at efecto_click
-                action Return("pacientes")
+                # CAMBIAMOS ESTA LÍNEA:
+                action Show("ventana_pacientes") 
             text _("Pacientes"):
                 xalign 0.5 size 18 color "#000" outlines [(1, "#fff", 0, 0)]
 
@@ -106,3 +114,96 @@ screen pantalla_escritorio():
             action Return("papelera")
         text _("Papelera"):
             xalign 0.5 size 18 color "#000" outlines [(1, "#fff", 0, 0)]
+
+# ---------------- VENTANA DE PACIENTES ----------------
+screen ventana_pacientes():
+    modal True
+    
+    fixed:
+        xsize 1200 ysize 800
+        align (0.5, 0.4) 
+
+        # 1. Fondo de la ventana
+        add im.Scale("images/ventana_pacientes.png", 1200, 800)
+
+        # 2. BOTÓN CERRAR (X)
+        # Ajustado a ~1150 para que entre en los 1200px de ancho
+        imagebutton:
+            idle Solid("#00000000") 
+            hover Solid("#ff000033") 
+            xpos 980 ypos 75 # Ajusta estos si la X no coincide exactamente
+            xysize (50, 45) 
+            action Hide("ventana_pacientes")
+
+        # 3. BOTÓN MAXIMIZAR
+        imagebutton:
+            idle Solid("#00000000")
+            hover Solid("#ffffff33")
+            xpos 1085 ypos 15 
+            xysize (45, 45)
+            action Notify("Ventana ya maximizada.")
+
+        # 4. BOTÓN MINIMIZAR
+        imagebutton:
+            idle Solid("#00000000")
+            hover Solid("#ffffff33")
+            xpos 1035 ypos 15 
+            xysize (45, 45)
+            action Hide("ventana_pacientes")
+
+        # 5. CONTENEDOR DE CARPETAS (Con icon_folder.png)
+        grid 5 1:
+            xalign 0.5 ypos 150 
+            spacing 40
+
+            # Carpeta de Damián
+            vbox:
+                at aparecer_lento(0.2)
+                spacing 5
+                imagebutton:
+                    # ACTUALIZADO: Ahora usa icon_folder.png
+                    idle im.Scale("images/icon_folder.png", 100, 100) 
+                    at efecto_click
+                    action [Hide("ventana_pacientes"), Show("ventana_damian")] 
+                text "Damian" xalign 0.5 size 16 color "#000"
+
+            # Otros espacios bloqueados
+            for i in range(2, 6):
+                vbox:
+                    at aparecer_lento(0.2 * i)
+                    spacing 5
+                    imagebutton:
+                        idle im.Scale("images/icon_folder.png", 100, 100)
+                        at efecto_click
+                        action Notify("Acceso denegado.")
+                    text "---" xalign 0.5 size 16 color "#777"
+                
+# ---------------- VENTANA ESPECÍFICA DAMIÁN ----------------
+screen ventana_damian():
+    modal True
+    add im.Scale("images/ventana_pacientes.png", 1200, 800) align (0.5, 0.4)
+    
+    text "Expediente: Damian" xpos 400 ypos 175 size 22 color "#000"
+
+    imagebutton:
+        idle Solid("#00000000")
+        xpos 1485 ypos 165 xysize (40, 40)
+        action [Hide("ventana_damian"), Show("ventana_pacientes")]
+
+    hbox:
+        align (0.4, 0.4)
+        spacing 100
+        
+        vbox:
+            imagebutton:
+                idle "icon_notas"
+                at efecto_click
+                action Return("historia_damian")
+            text "Historia Clínica" xalign 0.5 size 16 color "#000"
+
+        vbox:
+            imagebutton:
+                idle im.Scale("images/icon_legajo_damian.png", 120, 120)
+                at efecto_click
+                action Return("legajo_damian")
+            text "Legajo" xalign 0.5 size 16 color "#000"

@@ -7,15 +7,19 @@ label escritorio:
     window hide 
     $ resultado = renpy.call_screen("pantalla_escritorio")
 
+# ---------------- LÓGICA DE CARPETAS Y POPUPS ----------------
     if resultado == "pacientes":
-        "Sistema: Accediendo a la base de datos de pacientes..."
-    elif resultado == "legajo":
-        "Sistema: Abriendo legajos..."
-    elif resultado == "notas":
-        "Sistema: Bloc de notas vacío."
-    elif resultado == "explorer":
-        "Sistema: Buscando red..."
-    elif resultado == "papelera":
-        "Sistema: Nada para restaurar."
+        # ELIMINAR: "Sistema: Abriendo base de datos..."
+        # AGREGAR:
+        show screen ventana_pacientes
+        
+    elif resultado == "historia_damian":
+        hide screen ventana_damian
+        "Revisando notas de sesiones anteriores de Damián..."
+        # jump resumen_sesiones (si tenés el label)
+        
+    elif resultado == "legajo_damian":
+        hide screen ventana_damian
+        "Nombre: Damián Ferreyra. Edad: 45 años. Ocupación: Contador."
 
     jump escritorio
