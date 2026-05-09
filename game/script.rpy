@@ -1,42 +1,21 @@
-﻿# ===============================================
-# PSYCH SESSION - script.rpy
-# Variables globales, personajes, inicio
-# ===============================================
+﻿label start:
+    scene black
+    "Iniciando sesión..."
+    jump escritorio
 
-# -- Personajes --
-define psi = Character("Vos", color="#2E75B6")
-define damian = Character("Damian", color="#8B0000")
-define narrador = Character(None)
+label escritorio:
+    window hide 
+    $ resultado = renpy.call_screen("pantalla_escritorio")
 
-# -- Variables globales del juego --
-default dia_actual = 1
-default sesion_actual = 1
+    if resultado == "pacientes":
+        "Sistema: Accediendo a la base de datos de pacientes..."
+    elif resultado == "legajo":
+        "Sistema: Abriendo legajos..."
+    elif resultado == "notas":
+        "Sistema: Bloc de notas vacío."
+    elif resultado == "explorer":
+        "Sistema: Buscando red..."
+    elif resultado == "papelera":
+        "Sistema: Nada para restaurar."
 
-# -- Estadísticas del psicólogo --
-default stat_rapport = 0
-default stat_interpretacion = 0
-default stat_contencion = 0
-default stat_confrontacion = 0
-default stat_escucha = 0
-
-# -- Trofeos --
-default trofeo_damian_s1 = False
-default trofeo_damian_alta = False
-default trofeo_primer_abandono = False
-
-# -- Estado de pacientes (activo/abandonó) --
-default damian_activo = True
-default roxana_activo = False
-default german_activo = False
-default andres_activo = False
-default susana_activo = False
-
-# ===============================================
-# INICIO
-# ===============================================
-label start:
-    scene black with fade
-    "Psych Session"
-    "Temporada 1"
-    pause 1.0
     jump escritorio

@@ -8,6 +8,10 @@
 
 ## Básico ######################################################################
 
+## todo el juego en 1920x1080.
+define config.screen_width = 1920
+define config.screen_height = 1080
+
 ## Nombre del juego en forma legible. Usado en el título de la ventana del
 ## juego, en la interfaz y en los informes de error.
 ##
